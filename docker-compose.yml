@@ -123,14 +123,6 @@ services:
 
   web:
     image: danidoble/mediaflow-web:latest
-    build:
-      context: ../mediaflow-web
-      dockerfile: Dockerfile
-      args:
-        # Empty string → browser uses relative paths (/api/v1/...) routed through
-        # this nginx proxy. Set to the full public URL if building a standalone image.
-        - PUBLIC_API_BASE_URL=${PUBLIC_API_BASE_URL:-}
-        - PUBLIC_APP_NAME=${PUBLIC_APP_NAME:-MediaFlow}
     ports:
       - "${PUBLIC_APP_PORT:-80}:80"
     volumes:
