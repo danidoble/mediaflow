@@ -148,7 +148,7 @@ services:
 
   watchtower:
     image: containrrr/watchtower:latest
-    command: --label-enable --cleanup --interval ${WATCHTOWER_INTERVAL:-300}
+    command: --label-enable --cleanup --rolling-restart --interval ${WATCHTOWER_INTERVAL:-300}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
