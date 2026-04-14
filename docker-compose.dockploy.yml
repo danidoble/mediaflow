@@ -83,6 +83,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 15s
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     restart: unless-stopped
 
   worker:
@@ -97,6 +99,8 @@ services:
       minio:
         condition: service_healthy
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
   beat:
     image: danidoble/mediaflow-api:latest
@@ -105,6 +109,8 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     restart: unless-stopped
 
   web:
@@ -120,6 +126,17 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: unless-stopped
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    command: --label-enable --cleanup --interval ${WATCHTOWER_INTERVAL:-300}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_NOTIFICATIONS=${WATCHTOWER_NOTIFICATIONS:-}
     restart: unless-stopped
 
 volumes:

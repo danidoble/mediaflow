@@ -92,6 +92,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 15s
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     restart: unless-stopped
 
   worker:
@@ -110,6 +112,8 @@ services:
         limits:
           cpus: "2.0"
           memory: 2G
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     restart: unless-stopped
 
   beat:
@@ -119,6 +123,8 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     restart: unless-stopped
 
   web:
@@ -136,6 +142,17 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: unless-stopped
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    command: --label-enable --cleanup --interval ${WATCHTOWER_INTERVAL:-300}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_NOTIFICATIONS=${WATCHTOWER_NOTIFICATIONS:-}
     restart: unless-stopped
 
 volumes:
